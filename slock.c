@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <X11/extensions/Xrandr.h>
@@ -134,6 +135,7 @@ readpw(Display *dpy, struct xrandr *rr, struct lock **locks, int nscreens,
 	unsigned int len, color;
 	KeySym ksym;
 	XEvent ev;
+	time_t t;
 
 	len = 0;
 	running = 1;
@@ -167,6 +169,8 @@ readpw(Display *dpy, struct xrandr *rr, struct lock **locks, int nscreens,
 				if (running) {
 					XBell(dpy, 100);
 					failure = 1;
+					time(&t);
+					fprintf(stderr, "BAD password entered at %s", ctime(&t));
 				}
 				explicit_bzero(&passwd, sizeof(passwd));
 				len = 0;
